@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import co.edureka.model.User;
@@ -69,6 +70,29 @@ public class JDBCHelper {
 		}
 		
 		return i;
+	}
+	
+	public boolean authenticateUser(User user){
+		
+		boolean auth = true;
+		
+		try {
+			
+			String sql = "select * from User where email = ? and password = ?";
+			
+			pStmt = con.prepareStatement(sql);
+			pStmt.setString(1, user.email);
+			pStmt.setString(2, user.password);
+			
+			ResultSet rs = pStmt.executeQuery();
+			
+			auth = rs.next();
+			System.out.println("Auth is: "+auth);
+		} catch (Exception e) {
+			System.out.println("Some Exception: "+e);
+		}
+		
+		return auth;
 	}
 	
 	//4. Close the Connection
